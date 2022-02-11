@@ -1,3 +1,5 @@
+#!/bin/bash
+source $HOME/.profile
 #echo "# Checking DEV region NORTH for untagged…"
 #echo "… instances"
 devnorthinstances=$(aws ec2 describe-instances --output text --query 'Reservations[].Instances[?!not_null(Tags[?Key == `BillTo`].Value)] | [].[InstanceId]' --profile dev-eu-north-1 | wc -l | xargs)
@@ -60,15 +62,12 @@ ${prodnorthnetworkinterfaces} untagged network interfaces in prod/north\n \
 ${prodcentralinstances} untagged instances in prod/central\n \
 ${prodcentralvolumes} untagged volumes in prod/central\n \
 ${prodcentralsnapshots} untagged snapshots in prod/central\n \
-${prodcentralnetworkinterfaces} untagged network interfaces in prod/central" > /home/ubuntu/latest.txt
+${prodcentralnetworkinterfaces} untagged network interfaces in prod/central" > $HOME/latest.txt
 
 if [ $devnorthinstances -eq "0" ] && [ $devnorthvolumes -eq "0" ] && [ $devnorthsnapshots -eq "0" ] && [ $devnorthnetworkinterfaces -eq "0" ] && [ $devcentralistances -eq "0" ] && [ $devcentralvolumes -eq "0" ] && [ $devcentralsnapshots -eq "0" ] && [ $devcentralnetworkinterfaces -eq "0" ] && [ $prodnorthinstances -eq "0" ] && [ $prodnorthvolumes -eq "0" ] && [ $prodnorthsnapshots -eq "0" ] && [ $prodnorthnetworkinterfaces -eq "0" ] && [ $prodcentralinstances -eq "0" ] && [ $prodcentralvolumes -eq "0" ] && [ $prodcentralsnapshots -eq "0" ] && [ $prodcentralnetworkinterfaces -eq "0" ]
 then
       echo "all good"
 else
-	python3 sendmail.py -v "group.networking@nobia.com,group.hosting@nobia.com" < /home/ubuntu/latest.txt
+	sendmail.py -v "Group.Hosting@nobia.com" < $HOME/latest.txt
+	sendmail.py -v "Group.Networking@nobia.com" < $HOME/latest.txt
 fi
-
-
-
-

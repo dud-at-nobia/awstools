@@ -26,4 +26,4 @@ def send(recipient, sub, txt):
     s.quit()
 
 send(recipients, subject, message)
-
+print("sending to: " + recipients)
